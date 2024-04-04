@@ -38,6 +38,8 @@ TIME_RESOLUTION: float = 1.0
 SAMPLE_RATE: int = 48000
 
 # We're using 3-second chunks
+# TODO: tried using this to set the length instead of the introduced hack, but
+# it did not work as expected. Not sure why.
 SIG_LENGTH: float = 3.0
 
 # Define overlap between consecutive chunks <3.0; 0 = no overlap
