@@ -29,6 +29,9 @@ CUSTOM_CLASSIFIER = None
 # Audio settings #
 ##################
 
+WINDOW: str = 'rectangular'
+TIME_RESOLUTION: float = 1.0
+
 # We use a sample rate of 48kHz, so the model input size is
 # (batch size, 48000 kHz * 3 seconds) = (1, 144000)
 # Recordings will be resampled automatically.

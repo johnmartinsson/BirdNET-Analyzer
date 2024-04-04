@@ -76,6 +76,29 @@ def analyzeFile(item):
 
                 # Prepare sample and pass through model
                 data = np.array(samples, dtype="float32")
+
+                # TODO: hacky way to improve time resolution of embedding function
+                n_samples = data.shape[1]
+                if cfg.WINDOW == 'gaussian':
+                    print("using {} window".format(cfg.WINDOW))
+                    # Gaussian window
+                    std = cfg.SAMPLE_RATE * cfg.TIME_RESOLUTION / 6 
+                    window = gaussian(n_samples, std=std)
+                if cfg.WINDOW == 'rectangular':
+                    #print("using {} window".format(cfg.WINDOW))
+                    # Rectangular window
+                    window = np.zeros(n_samples, dtype="float32")
+                    sr = n_samples / 3
+                    offset = int(sr * ((3 - cfg.TIME_RESOLUTION) / 2))
+                    window[offset:-offset] = 1.0
+                    #print("average: ", np.mean(window))
+                else:
+                    raise ValueError("this window is not defined: ", cfg.WINDOW)
+
+                # multiply segments with window
+                if not cfg.WINDOW == 'none':
+                    data = data * window
+
                 e = model.embeddings(data)
 
                 # Add to results
