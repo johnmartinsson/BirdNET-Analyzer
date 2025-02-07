@@ -1,15 +1,22 @@
+# Local testing
+playground*
+foo*
+
 # Apple :/
 .DS_Store
 
 # Installers
 installers/
 desktop.ini
+*.iss
+*deploy*
+*hook*
 
 # Custom classifier
 checkpoints/custom/
 
 # Example output
-example/
+example
 !example/soundscape.wav
 !example/species_list.txt
 
@@ -29,7 +36,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+build*
 develop-eggs/
 dist/
 downloads/
@@ -53,7 +60,6 @@ MANIFEST
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
-!BirdNET-Analyzer-full.spec
 
 # Installer logs
 pip-log.txt
@@ -154,3 +160,7 @@ dmypy.json
 train_data/
 train_cache.npz
 autotune/
+
+gui-settings.json
+state.json
+entitlements.plist
