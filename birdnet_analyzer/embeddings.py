@@ -51,7 +51,7 @@ def analyzeFile(item):
 
     offset = 0
     duration = cfg.FILE_SPLITTING_DURATION
-    fileLengthSeconds = int(audio.getAudioFileLength(fpath, cfg.SAMPLE_RATE))
+    fileLengthSeconds = int(audio.getAudioFileLength(fpath))
     results = {}
 
     # Start time
