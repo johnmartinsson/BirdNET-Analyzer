@@ -45,6 +45,9 @@ def analyzeFile(item):
     Args:
         item: (filepath, config)
     """
+    # print the config
+    # print("config: ", cfg.getConfig())
+
     # Get file path and restore cfg
     fpath: str = item[0]
     cfg.setConfig(item[1])
@@ -86,11 +89,11 @@ def analyzeFile(item):
 
                 # TODO: hacky way to improve time resolution of embedding function
                 n_samples = data.shape[1]
-                if cfg.WINDOW == 'gaussian':
-                    print("using {} window".format(cfg.WINDOW))
-                    # Gaussian window
-                    std = cfg.SAMPLE_RATE * cfg.TIME_RESOLUTION / 6 
-                    window = gaussian(n_samples, std=std)
+                # if cfg.WINDOW == 'gaussian':
+                #     print("using {} window".format(cfg.WINDOW))
+                #     # Gaussian window
+                #     std = cfg.SAMPLE_RATE * cfg.TIME_RESOLUTION / 6 
+                #     window = gaussian(n_samples, std=std)
                 if cfg.WINDOW == 'rectangular':
                     #print("using {} window".format(cfg.WINDOW))
                     # Rectangular window
