@@ -14,14 +14,19 @@ import os
 import librosa
 import soundfile as sf
 
+from packaging import version
+
 # Check librosa version
-librosa_version = librosa.__version__
+librosa_version = version.parse(librosa.__version__)
 
 def get_audio_duration(audio_segment_path):
     """Get the duration of an audio segment."""
-    if librosa_version >= '0.10':
+    print("librosa version: ", librosa_version)
+    if librosa_version >= version.parse('0.10'):
+        print("Using 'path' argument for librosa.get_duration")
         return librosa.get_duration(path=audio_segment_path)
     else:
+        print("Using 'filename' argument for librosa.get_duration")
         return librosa.get_duration(filename=audio_segment_path)
 
 
