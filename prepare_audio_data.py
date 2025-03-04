@@ -14,6 +14,17 @@ import os
 import librosa
 import soundfile as sf
 
+# Check librosa version
+librosa_version = librosa.__version__
+
+def get_audio_duration(audio_segment_path):
+    """Get the duration of an audio segment."""
+    if librosa_version >= '0.10':
+        return librosa.get_duration(path=audio_segment_path)
+    else:
+        return librosa.get_duration(filename=audio_segment_path)
+
+
 def split_audio_files(input_dir, output_audio_dir, segment_duration=30):
     """Splits WAV audio files into segments of specified duration."""
     os.makedirs(output_audio_dir, exist_ok=True)
@@ -162,7 +173,7 @@ def create_metadata_json(output_dir, audio_dir, embedding_dir, spectrogram_dir, 
     for original_filename, info in original_audio_info.items():
         for segment_filename in info['segments_list']:
             audio_segment_path = os.path.join(audio_dir, segment_filename)
-            segment_duration = librosa.get_duration(path=audio_segment_path)
+            segment_duration = get_audio_duration(audio_segment_path)
             all_audio_files.append(segment_filename)
             audio_lengths[segment_filename] = segment_duration
             if segment_filename in embedding_files_map:
