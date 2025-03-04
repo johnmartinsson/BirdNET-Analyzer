@@ -10,44 +10,33 @@ import matplotlib.pyplot as plt
 import librosa.display
 import json
 
+import os
+import librosa
+import soundfile as sf
+
 def split_audio_files(input_dir, output_audio_dir, segment_duration=30):
-    """Splits WAV audio files into 30-second segments."""
+    """Splits WAV audio files into segments of specified duration."""
     os.makedirs(output_audio_dir, exist_ok=True)
-    original_audio_files = {} # Store original filenames and segment counts
+    original_audio_files = {}  # Store original filenames and segment counts
     for filename in os.listdir(input_dir):
         if filename.endswith(".WAV") or filename.endswith(".wav"):
+            print("Splitting: ", filename)
             input_audio_path = os.path.join(input_dir, filename)
             segment_filenames = []
             try:
-                y, sr = librosa.load(input_audio_path, sr=None) # Load audio with original sample rate
+                y, sr = librosa.load(input_audio_path, sr=None)  # Load audio with original sample rate
                 segment_samples = segment_duration * sr
-                num_segments = len(y) // segment_samples
+                num_segments = max(1, len(y) // segment_samples)  # Ensure at least one segment
                 original_audio_files[filename] = {'num_segments': num_segments, 'segments_list': []}
 
                 for i in range(num_segments):
                     start_sample = i * segment_samples
-                    end_sample = (i + 1) * segment_samples
+                    end_sample = (i + 1) * segment_samples if (i + 1) * segment_samples < len(y) else len(y)
                     segment = y[start_sample:end_sample]
 
-                    # Infer timestamp from filename and segment index
-                    base_filename = filename[:-4] # remove .WAV
-                    start_time_seconds = i * segment_duration
-
-                    # Extract hour and minute from filename
-                    hour_minute_str = base_filename.split('_')[1][:4] # HHMM
-                    hour = int(hour_minute_str[:2])
-                    minute = int(hour_minute_str[:2])
-
-                    # Calculate segment start time
-                    segment_minute = minute + (start_time_seconds // 60)
-                    segment_hour = hour + (segment_minute // 60)
-                    segment_minute = segment_minute % 60
-                    segment_second = start_time_seconds % 60
-
-                    segment_hour = segment_hour % 24 # Ensure hour is within 0-23
-
-                    segment_timestamp_str = f"{segment_hour:02d}{segment_minute:02d}{segment_second:02d}"
-                    output_segment_filename = f"{base_filename}_{segment_timestamp_str}_segment_{i+1}.wav"
+                    # Generate segment filename
+                    base_filename = os.path.splitext(filename)[0]  # remove extension
+                    output_segment_filename = f"{base_filename}_segment_{i+1}.wav"
                     output_segment_path = os.path.join(output_audio_dir, output_segment_filename)
                     if not os.path.exists(output_segment_path):
                         sf.write(output_segment_path, segment, sr)
@@ -224,6 +213,7 @@ def main():
 
     print("Creating metadata file...")
     # read sample rate from a sample audio file
+    print("Output audio segments dir: ", output_audio_segments_dir)
     waveform, sample_rate = librosa.load(os.path.join(output_audio_segments_dir, os.listdir(output_audio_segments_dir)[0]), sr=None)
     segment_length = len(waveform) / sample_rate
 

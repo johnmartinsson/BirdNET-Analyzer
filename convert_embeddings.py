@@ -1,10 +1,11 @@
 import os
 import json
 import msgpack
+import sys
 
 # Define the input and output directories
-input_dir = "/home/john/Gits/BirdNET-Analyzer/example/"
-output_dir = "/home/john/Gits/BirdNET-Analyzer/example/"
+input_dir = sys.argv[1]
+output_dir = input_dir
 
 # Define the time resolution
 time_resolution = 1
